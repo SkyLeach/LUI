@@ -1,5 +1,6 @@
 import re
 
+import sys
 from LUIObject import LUIObject
 from LUISprite import LUISprite
 from LUILabel import LUILabel
@@ -77,7 +78,10 @@ class LUIInputField(LUIObject):
     @value.setter
     def value(self, new_value):
         """ Sets the value of the input field """
-        self._value = unicode(new_value)
+        if sys.version_info[0] < 3:
+            self._value = unicode(new_value)
+        else:
+            self._value = str(new_value)
         self._render_text()
         self.trigger_event("changed", self._value)
 

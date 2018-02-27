@@ -1,4 +1,5 @@
 
+import sys
 from LUIObject import LUIObject
 from LUISprite import LUISprite
 from LUILabel import LUILabel
@@ -193,7 +194,10 @@ class LUISelectdrop(LUIObject):
             opt_bg.bind("click", partial(self._on_opt_click, opt_id))
             opt_bg.solid = True
 
-            opt_label = LUILabel(parent=opt_container, text=unicode(opt_val))
+            if sys.version_info[0] < 3:
+                opt_label = LUILabel(parent=opt_container, text=unicode(opt_val))
+            else:
+                opt_label = LUILabel(parent=opt_container, text=str(opt_val))
             opt_label.top = 8
             opt_label.left = 8
 

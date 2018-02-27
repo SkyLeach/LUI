@@ -1,4 +1,4 @@
-
+import sys
 from panda3d.lui import LUIText
 from LUIObject import LUIObject
 from LUIInitialState import LUIInitialState
@@ -18,9 +18,14 @@ class LUILabel(LUIObject):
         rendered below the actual text. """
         LUIObject.__init__(self)
         LUIInitialState.init(self, kwargs)
+        if sys.version_info[0] < 3:
+            ut = unicode(text)
+        else:
+            ut = str(text)
+
         self._text = LUIText(
             self,
-            unicode(text),
+            ut,
             font,
             font_size,
             0,
@@ -36,9 +41,13 @@ class LUILabel(LUIObject):
             shadow = LUILabel.DEFAULT_USE_SHADOW
         self._have_shadow = shadow
         if self._have_shadow:
+            if sys.version_info[0] < 3:
+                ut = unicode(text)
+            else:
+                ut = str(text)
             self._shadow_text = LUIText(
                 self,
-                unicode(text),
+                ut,
                 font,
                 font_size,
                 0,
@@ -60,9 +69,13 @@ class LUILabel(LUIObject):
 
     def set_text(self, text):
         """ Sets the text of the label """
-        self._text.text = unicode(text)
+        if sys.version_info[0] < 3:
+            ut = unicode(text)
+        else:
+            ut = str(text)
+        self._text.text = ut
         if self._have_shadow:
-            self._shadow_text.text = unicode(text)
+            self._shadow_text.text = ut
 
     text = property(get_text, set_text)
 

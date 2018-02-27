@@ -72,14 +72,18 @@ def send_command(event):
     command and prints something on the console """
     label = LUIFormattedLabel()
     color = (0.9, 0.9, 0.9, 1.0)
-    if event.message.startswith(u"/"):
+    if event.message.startswith("/"):
         color = (0.35, 0.65, 0.24, 1.0)
     label.add(text=">>>  ", color=(0.35, 0.65, 0.24, 1.0))
     label.add(text=event.message, color=color)
     layout.add(label)
 
     result = LUIFormattedLabel()
-    result.add("Your command in rot13: " + event.message.encode("rot13"), color=(0.4, 0.4, 0.4, 1.0))
+    if sys.version_info[0]==3 and sys.version_info[1]>2:
+        import codecs
+        result.add("Your command in rot13: " + codecs.encode(event.message, "rot13"), color=(0.4, 0.4, 0.4, 1.0))
+    else:
+        result.add("Your command in rot13: " + event.message.encode("rot13"), color=(0.4, 0.4, 0.4, 1.0))
     layout.add(result)
     input_field.clear()
 
@@ -92,6 +96,11 @@ input_field.request_focus()
 
 # Add some initial commands
 for demo_command in ["Hello world!", "This is a simple console", "You can type commands like this:", "/test"]:
-    input_field.trigger_event("enter", unicode(demo_command))
+    dc = None
+    if sys.version_info[0] < 3:
+        dc = unicode(demo_command)
+    else:
+        dc = str(demo_command)
+    input_field.trigger_event("enter", dc)
 
 s.run()
